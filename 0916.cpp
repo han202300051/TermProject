@@ -5,7 +5,7 @@
 #include "Camera/CameraComponent.h"
 
 // 기본값 설정
-AInputCharacter::AInputCharacter()
+AInputCharacter::AInputCharacter() //생성자 정의(생성은 헤더파일)
 {
 	// Tick() 매 프레임 호출 가능하게 설정 (성능 위해 필요 없으면 끄기 가능)
 	PrimaryActorTick.bCanEverTick = true;
@@ -30,7 +30,7 @@ void AInputCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-// 입력 바인딩 처리
+// 입력 바인딩 처리 (게임 동작 연결 Bp->IA_XX)
 void AInputCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
