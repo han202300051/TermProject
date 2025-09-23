@@ -44,6 +44,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* FirstPersonMesh;
 
+	// 공격 애니메이션 (Montage)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	UAnimMontage* MeleeAttackMontage;
+
+
 public:
 	// 기본 생성자
 	AInputCharacter();
