@@ -146,8 +146,16 @@ void AInputCharacter::OnSlideInput(const FInputActionValue& Value)
 // ──────────────────────────────────────────────
 void AInputCharacter::OnMeleeAttack(const FInputActionValue& Value)
 {
-	PerformMeleeAttack();
+	// 애니메이션 실행
+	if (MeleeAttackMontage && GetMesh() && GetMesh()->GetAnimInstance())
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		AnimInstance->Montage_Play(MeleeAttackMontage);
+	}
+
+
 }
+
 
 // ──────────────────────────────────────────────
 // 실제 공격 판정
