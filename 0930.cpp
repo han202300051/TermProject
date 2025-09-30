@@ -132,6 +132,11 @@ void AInputCharacter::Attack()
 	}
 }
 
+//공격
+공격 중이 아닐 때만 애니메이션 재생.
+bIsAttacking → 공격 중 상태 플래그.
+
+
 // 검 충돌 처리
 void AInputCharacter::OnSwordOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -144,3 +149,7 @@ void AInputCharacter::OnSwordOverlapBegin(UPrimitiveComponent* OverlappedComp, A
 		}
 	}
 }
+
+//검이 다른 액터와 겹치면 호출.
+bShouldDealDamage가 true일 때만 적용.
+다른 액터가 자신이 아닌 경우 → 해당 액터 삭제(데미지 처리)
