@@ -16,6 +16,7 @@ void UBasicAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	// 서버 → 클라이언트로 속성 값 복제 설정
+	// 멀티플레이 환경에서 체력과 스태미나가 항상 서버 기준으로 클라이언트에 동기화됨
 	DOREPLIFETIME_CONDITION_NOTIFY(UBasicAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBasicAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBasicAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
@@ -39,7 +40,7 @@ void UBasicAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute,
 	}
 }
 
-// GameplayEffect가 적용된 후 호출됨
+// GameplayEffect가 적용된 후 호출됨 (공격/회복으로 체력이 변할 때 호출)
 void UBasicAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
