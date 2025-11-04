@@ -1,40 +1,48 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "NexusAbilitySystemComponent.h"
 #include "Characters/NexusCharacterBase.h"
 
-// 생성자: 기본 틱 활성화
+// 생성자: 컴포넌트 기본 설정
+// - Tick 활성화: 매 프레임 능력 관련 체크가 필요한 경우 사용
 UNexusAbilitySystemComponent::UNexusAbilitySystemComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-// 게임 시작 시 호출
+// BeginPlay
+// - 컴포넌트가 게임 시작 시 초기화되면 호출됨
+// - AbilitySystemComponent는 Pawn/Character가 Possess된 이후 활용되는 경우가 많아,
+//   여기서는 초기화 로직을 최소화하고 실제 동작은 Rep 함수나 Tick에서 처리하는 편
 void UNexusAbilitySystemComponent::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-// Ability 목록이 복제로 갱신될 때 호출
+// OnRep_ActivateAbilities
+// - 서버에서 ActivatableAbilities(활성화 가능한 능력 목록)가 바뀌면
+//   클라이언트로 복제된 뒤 자동 호출되는 함수
+// - 목적: Ability 목록이 갱신되었는지 감지해 UI 업데이트, 이펙트 등 후처리 실행
 void UNexusAbilitySystemComponent::OnRep_ActivateAbilities()
 {
 	Super::OnRep_ActivateAbilities();
 
-	// Owner 캐릭터 확인
+	// Owner가 Nexus 캐릭터인지 확인 (UI 이벤트 전달을 위해 필요)
 	ANexusCharacterBase* Character = Cast<ANexusCharacterBase>(GetOwner());
 	if (!Character) return;
 
-	// 이전 목록과 비교하여 변경 여부 체크
+	// 변경 여부 판단 flag
 	bool bAbilitiesChanged = false;
 
-	// 개수 다르면 변경된 것으로 판단
+	// 1) 먼저 목록 크기 비교
+	//    개수가 다르면 목록이 변경된 것이므로 즉시 true
 	if (LastActivatableAbilities.Num() != ActivatableAbilities.Items.Num())
 	{
 		bAbilitiesChanged = true;
 	}
 	else
 	{
-		// 개수가 같으면 하나씩 Ability 비교
+		// 2) 개수가 같다면 각 AbilitySpec을 하나씩 비교
+		//    AbilitySpec 내부의 Ability 클래스 포인터를 비교하여
+		//    실제 다른 Ability가 들어왔는지 확인
 		for (int32 i = 0; i < LastActivatableAbilities.Num(); i++)
 		{
 			if (LastActivatableAbilities[i].Ability != ActivatableAbilities.Items[i].Ability)
@@ -45,17 +53,28 @@ void UNexusAbilitySystemComponent::OnRep_ActivateAbilities()
 		}
 	}
 
-	// 변경 감지 시 캐릭터에게 알림 + 목록 갱신
+	// 변경 사항이 존재한다면
 	if (bAbilitiesChanged)
 	{
+		// 캐릭터에게 Ability 변경 이벤트 전달
+		// → UI 갱신, 단축키 매핑 재정렬, 능력 아이콘 업데이트 등에 사용 가능
 		Character->SendAbilitiesChangedEvent();
+
+		// 현재 ActivatableAbilities 리스트를 저장하여 다음 비교 때 사용
 		LastActivatableAbilities = ActivatableAbilities.Items;
 	}
 }
 
-// 매 프레임 호출
+// TickComponent
+// - 매 프레임 호출됨
+// - 필요 시 Ability 상태 실시간 체크, 쿨다운 모니터링, 디버깅 등에 사용 가능
 void UNexusAbilitySystemComponent::TickComponent(
-	float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+	float DeltaTime, 
+	ELevelTick TickType,
+	FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// 현재는 특별한 매 프레임 로직 없음
+	// 필요 시: 능력 쿨다운 UI 업데이트, 지속 효과 체크 등 추가 가능
 }
