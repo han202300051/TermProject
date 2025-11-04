@@ -1,0 +1,61 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "NexusAbilitySystemComponent.h"
+#include "Characters/NexusCharacterBase.h"
+
+// 생성자: 기본 틱 활성화
+UNexusAbilitySystemComponent::UNexusAbilitySystemComponent()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
+// 게임 시작 시 호출
+void UNexusAbilitySystemComponent::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+// Ability 목록이 복제로 갱신될 때 호출
+void UNexusAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	// Owner 캐릭터 확인
+	ANexusCharacterBase* Character = Cast<ANexusCharacterBase>(GetOwner());
+	if (!Character) return;
+
+	// 이전 목록과 비교하여 변경 여부 체크
+	bool bAbilitiesChanged = false;
+
+	// 개수 다르면 변경된 것으로 판단
+	if (LastActivatableAbilities.Num() != ActivatableAbilities.Items.Num())
+	{
+		bAbilitiesChanged = true;
+	}
+	else
+	{
+		// 개수가 같으면 하나씩 Ability 비교
+		for (int32 i = 0; i < LastActivatableAbilities.Num(); i++)
+		{
+			if (LastActivatableAbilities[i].Ability != ActivatableAbilities.Items[i].Ability)
+			{
+				bAbilitiesChanged = true;
+				break;
+			}
+		}
+	}
+
+	// 변경 감지 시 캐릭터에게 알림 + 목록 갱신
+	if (bAbilitiesChanged)
+	{
+		Character->SendAbilitiesChangedEvent();
+		LastActivatableAbilities = ActivatableAbilities.Items;
+	}
+}
+
+// 매 프레임 호출
+void UNexusAbilitySystemComponent::TickComponent(
+	float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
