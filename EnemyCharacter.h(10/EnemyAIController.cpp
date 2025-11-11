@@ -15,6 +15,7 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
     Super::OnPossess(InPawn);
     ControlledPawn = InPawn;
     // 플레이어 찾기 (프로젝트에 플레이어가 하나라는 가정)
+    // 플레이어 Pawn을 바로 캐싱 → Tick에서 매번 검색하지 않아도 됨. (성능 최적화 포인트)
     APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
     if (PC)
     {
