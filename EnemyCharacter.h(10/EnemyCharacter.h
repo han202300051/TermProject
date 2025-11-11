@@ -44,8 +44,10 @@ protected:
     UAnimMontage* AttackMontage;
 
 private:
+    // 쿨다운 종료 시 호출
     void ResetAttack();
 
+    // 공격 가능 상태를 저장하는 내부 플래그
     bool bCanAttack;
 
     FTimerHandle TimerHandle_ResetAttack;
