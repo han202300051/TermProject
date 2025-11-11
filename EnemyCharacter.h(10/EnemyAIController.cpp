@@ -1,0 +1,51 @@
+// EnemyAIController.cpp
+#include "EnemyAIController.h"
+#include "Kismet/GameplayStatics.h"
+#include "EnemyCharacter.h"
+#include "NavigationSystem.h"
+#include "GameFramework/Character.h"
+
+AEnemyAIController::AEnemyAIController()
+{
+    PrimaryActorTick.bCanEverTick = true;
+}
+
+void AEnemyAIController::OnPossess(APawn* InPawn)
+{
+    Super::OnPossess(InPawn);
+    ControlledPawn = InPawn;
+    // 플레이어 찾기 (프로젝트에 플레이어가 하나라는 가정)
+    APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+    if (PC)
+    {
+        PlayerPawn = PC->GetPawn();
+    }
+}
+
+void AEnemyAIController::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    if (!PlayerPawn || !ControlledPawn) return;
+
+    const float DistSqr = FVector::DistSquared(PlayerPawn->GetActorLocation(), ControlledPawn->GetActorLocation());
+    const float AttackRangeSqr = FMath::Square(AttackRange);
+
+    // 사거리 내면 정지하고 공격 시도
+    if (DistSqr <= AttackRangeSqr)
+    {
+        StopMovement();
+
+        // 시도해서 공격 (ControlledPawn를 AEnemyCharacter로 캐스팅)
+        AEnemyCharacter* Enemy = Cast<AEnemyCharacter>(ControlledPawn);
+        if (Enemy && Enemy->CanAttack())
+        {
+            Enemy->TryAttack(PlayerPawn);
+        }
+    }
+    else
+    {
+        // 사거리 밖이면 이동
+        MoveToActor(PlayerPawn, AcceptanceRadius, true, true, true, nullptr, true);
+    }
+}
