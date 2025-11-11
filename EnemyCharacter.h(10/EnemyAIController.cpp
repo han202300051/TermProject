@@ -27,8 +27,10 @@ void AEnemyAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
+    // PlayerPawn이 없으면(=플레이어 죽음 또는 초기 로딩) AI는 멈춤.
     if (!PlayerPawn || !ControlledPawn) return;
 
+    // 거리 계산에서 제곱 거리 비교 사용. (루트 연산은 무거움)
     const float DistSqr = FVector::DistSquared(PlayerPawn->GetActorLocation(), ControlledPawn->GetActorLocation());
     const float AttackRangeSqr = FMath::Square(AttackRange);
 
