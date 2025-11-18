@@ -22,16 +22,16 @@ protected:
     bool bIsInvincible;               // 무적 중인지
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dodge")
-    float DodgeDistance;
+    float DodgeDistance; // 회피 거리
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dodge")
-    float DodgeDuration;
+    float DodgeDuration; // 회피 지속 시간
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dodge")
-    float InvincibleTime;
+    float InvincibleTime; // 무적 지속 시간
 
     FTimerHandle DodgeTimerHandle;
-    FTimerHandle InvincibleTimerHandle;
+    FTimerHandle InvincibleTimerHandle; // 타이머 시스템 변수 -> 일정 시간 지나면 함수 호
 
     // 애니메이션 몽타주
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dodge")
