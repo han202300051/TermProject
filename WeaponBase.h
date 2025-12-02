@@ -49,7 +49,6 @@ public:
 	/**
 	 * 현재 사용 중인 퍼짐 값
 	 * - BaseSpread에서 시작해서 사격할 때마다 증가
-	 * - 나중에 "시간이 지나면 조금씩 줄어드는 로직"도 추가 가능
 	 */
 	UPROPERTY(VisibleAnywhere, Category = "Weapon|Spread")
 	float CurrentSpread;
@@ -67,13 +66,13 @@ public:
 
 	/**
 	 * 발사 함수
-	 * - 실제 데미지/총알 스폰은 Character 쪽에서 처리한다고 가정하고
+	 * - 실제 데미지/총알 스폰은 Character 쪽에서 처리
 	 *   이 함수에서는 "반동 / 퍼짐 증가" 역할만 담당
 	 */
 	virtual void Fire(bool bIsADS);
 
 	/**
-	 * Spread를 적용한 방향 벡터 계산
+	 * Spread(확산)를 적용한 방향 벡터 계산
 	 * @param ForwardVector - 카메라나 총구의 정방향 벡터
 	 * @return 퍼짐이 적용된 새로운 방향 벡터
 	 */
