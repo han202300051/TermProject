@@ -22,7 +22,7 @@ void AWeaponBase::BeginPlay()
 
 /**
  * Fire
- * - 캐릭터가 발사 버튼을 눌렀을 때 호출되는 함수라고 가정
+ * - 캐릭터가 발사 버튼을 눌렀을 때 호출되는 함수
  * - 여기서는 "반동 + 퍼짐 증가"만 처리
  * - 실제 LineTrace나 Projectile 발사는 Character에서 별도로 처리
  */
@@ -42,8 +42,6 @@ void AWeaponBase::Fire(bool bIsADS)
 		MaxSpread
 	);
 
-	// ※ 만약 "한동안 사격 안 하면 퍼짐 서서히 감소" 기능을 추가하고 싶다면
-	//    Tick이나 Timer를 사용해서 CurrentSpread를 서서히 BaseSpread로 내려가게 만들 수 있음
 }
 
 /**
@@ -68,7 +66,6 @@ FVector AWeaponBase::ApplyBulletSpread(const FVector& ForwardVector) const
 		ConeHalfAngleDegree
 	);
 
-	// 이미 단위 벡터로 나오는 함수이지만, 안전하게 Normalize
 	NewDir.Normalize();
 	return NewDir;
 }
