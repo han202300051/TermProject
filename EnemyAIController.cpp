@@ -56,9 +56,11 @@ bool AEnemyAIController::IsPlayerInSight()
 {
 	if (!PlayerPawn || !GetPawn()) return false;
 
+	// AI의 위치 + Z축으로 50 올린 값 (땅에 묻히는 오류 안나게)
 	const FVector MyLoc = GetPawn()->GetActorLocation() + FVector(0,0,50);
 	const FVector PlayerLoc = PlayerPawn->GetActorLocation() + FVector(0,0,50);
 
+	//방향 벡터 (시야각 계산)
 	FVector DirToPlayer = (PlayerLoc - MyLoc).GetSafeNormal();
 	FVector Forward = GetPawn()->GetActorForwardVector();
 
@@ -69,7 +71,7 @@ bool AEnemyAIController::IsPlayerInSight()
 	if (Angle > SightAngle)
 		return false;
 
-	// 2) 시야 거리 체크
+	// 2) 시야 거리 체크 -> 시야각 한계(60도 넘기면 플레이어 못봄)
 	if (FVector::Dist(MyLoc, PlayerLoc) > SightRadius)
 		return false;
 
@@ -93,7 +95,7 @@ bool AEnemyAIController::IsPlayerInSight()
 }
 
 /**
- * 총 발사 (라인트레이스 기반)
+ * 총 발사 (라인트레이스 기반) //인게임에서 안씀!!!
  */
 void AEnemyAIController::ShootPlayer()
 {
