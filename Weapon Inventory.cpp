@@ -5,7 +5,7 @@ AMyCharacter::AMyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// WeaponSlots 기본 크기 4로 설정
+	// WeaponSlots 기본 크기 3로 설정
 	WeaponSlots.SetNum(3);
 }
 
@@ -73,7 +73,7 @@ void AMyCharacter::SelectWeapon(int32 Index)
 		WeaponSlots[Index]->OnEquip();
 
 		// 무기 장착 애니메이션을 넣고 싶으면 여기서 Montage 트리거
-		// PlayAnimMontage(EquipMontage);
+		PlayAnimMontage(EquipMontage);
 
 		CurrentWeaponIndex = Index;
 	}
