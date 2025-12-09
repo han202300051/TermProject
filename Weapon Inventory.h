@@ -17,7 +17,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-	/** 최대 무기 슬롯 4개 */
+	/** 최대 무기 슬롯 3개 */
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TArray<TSubclassOf<AWeaponBase>> DefaultWeapons;
 
